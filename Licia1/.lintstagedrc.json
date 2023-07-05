@@ -1,0 +1,8 @@
+{
+  "*.tsx": [
+    "yarn run lint:fix"
+  ],
+  "*.ts": [
+    "yarn run lint:fix"
+  ]
+}

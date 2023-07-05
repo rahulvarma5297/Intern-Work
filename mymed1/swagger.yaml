@@ -1,0 +1,901 @@
+openapi: 3.0.0
+info:
+  title: MyMed
+  description: |-
+    A health data aggregator and visualizing platform. The app will 
+    aggregate important health related data to provide insights. The data 
+    will be collected from a combination of devices, existing apps and 
+    through health databases.
+  contact:
+    email: puneet@aurictouch.com
+    name: Puneet Maloo
+  version: 1.0.0
+servers:
+  - url: /
+tags:
+  - name: Profile
+    description: User profile related API endpoints.
+  - name: Stats
+    description: Health data related API endpoints.
+  - name: Auth
+    description: Authentication endpoints
+  - name: Medical History
+    description: Medical history related endpoints.
+  - name: Device
+    description: Device related endpoints.
+paths:
+  /auth/otp:
+    post:
+      summary: 'Get OTP token provided a phone number or email'
+      description: 'Authentication endpoints'
+      parameters: []
+      operationId: ''
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OTPToken'
+        '429':
+          description: >-
+            When rate limit of 1 request per 30 seconds is breached, a 429
+            response is sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPRequest'
+  /auth/otp/verify:
+    post:
+      summary: 'Verify OTP token and get JWT token'
+      description: 'Authentication endpoints'
+      parameters: []
+      operationId: ''
+      tags:
+        - Auth
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '429':
+          description: >-
+            When rate limit of 1 request per 30 seconds is breached, a 429
+            response is sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OTPValidationRequest'
+  /auth/refresh:
+    post:
+      summary: Refresh JWT token
+      description: Refresh the JWT token via a refresh token.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/JWTRefreshRequest'
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RefreshedToken'
+        '429':
+          description: >-
+            When rate limit of 1 request per 30 seconds is breached, a 429
+            response is sent.
+  /auth/logout:
+    post:
+      summary: Logout
+      description: Logout the user and invalidate the JWT token.
+      tags:
+        - Auth
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LogoutRequest'
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LogoutResponse'
+        '429':
+          description: >-
+            When rate limit of 1 request per 30 seconds is breached, a 429
+            response is sent.
+  /auth/bankid/startToken:
+    get:
+      summary: 'Get the auto start token for starting the Bank ID authentication flow'
+      description: 'Authentication endpoints'
+      parameters: []
+      operationId: ''
+      tags:
+        - Auth
+        - BankID
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BankIDAuthStartToken'
+        '429':
+          description: >-
+            When rate limit of 1 request per 30 seconds is breached, a 429
+            response is sent.
+  /auth/bankid/verify:
+    post:
+      summary: 'Verify the Bank ID authentication flow'
+      description: 'Authentication endpoints'
+      parameters: []
+      operationId: ''
+      tags:
+        - Auth
+        - BankID
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+        '429':
+          description: >-
+            When rate limit of 1 request per 30 seconds is breached, a 429
+            response is sent.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BankIDAuthStartToken'
+  /profile:
+    get:
+      summary: 'Get user profile information'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Profile
+      operationId: ''
+      responses:
+        '200':
+          description: Default response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserProfile'
+    put:
+      summary: 'Edit user profile information'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Profile
+      operationId: ''
+      responses:
+        default:
+          description: Default response
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserProfileRequest'
+    delete:
+      summary: 'Delete account'
+      description: 'User can delete their account and all associated data from this endpoint.'
+      tags:
+        - Profile
+      operationId: ''
+      responses:
+        '204':
+          description: Default response on successful deletion.
+  /medical-conditions/family:
+    get:
+      summary: 'Get family medical history'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Medical History
+      operationId: ''
+      responses:
+        '200':
+          description: Array of disease ids.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalConditions'
+    put:
+      summary: 'Edit family medical history'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Medical History
+      operationId: ''
+      responses:
+        '200':
+          description: Array of disease ids.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalConditions'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalConditions'
+  /medical-conditions/self:
+    get:
+      summary: 'Get self medical history'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Medical History
+      operationId: ''
+      responses:
+        '200':
+          description: Array of disease ids.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalConditions'
+    put:
+      summary: 'Edit self medical history'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Medical History
+      operationId: ''
+      responses:
+        '200':
+          description: Array of disease ids.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalConditions'
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MedicalConditions'
+  /profile/devices/{device}:
+    get:
+      summary: 'Get device information'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Profile
+      parameters:
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    delete:
+      summary: 'Delete device information'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Profile
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      summary: 'Update device information'
+      description: 'User profile related API endpoints.'
+      tags:
+        - Profile
+      parameters:
+        - name: Authorization
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: device
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /medical-conditions:
+    get:
+      summary: 'Get a list of medical conditions'
+      description: 'Medical conditions related API endpoints.'
+      tags:
+        - Medical History
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in : query
+          required: true
+          schema:
+            type: integer
+        - name: search
+          in : query
+          required: false
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        '200':
+          description: Get a list of medical conditions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MedicalConditions'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /stats:
+    get:
+      summary: 'Get a snapshot of health parameters'
+      description: |
+        Retrieves the latest health data statistics based on the provided health parameter names.
+        If no query parameter is given, it returns all available health data.
+        If the `name` query parameter is provided, it returns the latest health data for the specified parameters.
+      parameters:
+        - name: name
+          in: query
+          required: false
+          schema:
+            type: string
+          example: spo2, temperature 
+      tags:
+        - Stats
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthSummary'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /stats/{id}:
+    delete:
+      summary: 'Delete a health parameter'
+      description: 'Health related API endpoints.'
+      tags:
+        - Stats
+      operationId: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Success response'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    patch:
+      summary: 'Update a health parameter'
+      description: 'Health related API endpoints.'
+      tags:
+        - Stats
+      operationId: ''
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Success response'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HealthTimeSeries'
+
+  /stats/{healthParam}:
+    get:
+      summary: 'Get snapshot for selected health parameter.'
+      description: 'Provides the last available data fir the selected parameter,'
+      tags:
+        - Stats
+      parameters:
+        - name: healthParam
+          in: path
+          required: true
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthSummary'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      summary: 'Update for selected health parameter.'
+      description: 'Health related API endpoints.'
+      tags:
+        - Stats
+      operationId: ''
+      parameters:
+        - name: healthParam
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 'Success response'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StatsRequest'
+  /stats/timeseries/{name}:
+    get:
+      summary: 'Get time series for selected health parameter.'
+      description: 'Health related API endpoints.'
+      tags:
+        - Stats
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Name of the health attribute
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+          description: Date in DDMMYYYY format.
+        - name: to
+          in: query
+          required: false
+          schema:
+            type: string
+          description: >-
+            Date in DDMMYY format. Leave blank for from date to the last
+            available date.
+          allowEmptyValue: true
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthTimeSeries'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /stats/upload:
+    post:
+      summary: 'Upload health data'
+      description: ''
+      tags:
+        - Stats
+      operationId: ''
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  enum:
+                    - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+                    - application/vnd.ms-excel
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+
+  /devices:
+    get:
+      summary: 'Get a list of devices'
+      description: 'Device related API endpoints.'
+      tags:
+        - Device
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: limit
+          in : query
+          required: true
+          schema:
+            type: integer
+        - name: search
+          in : query
+          required: false
+          schema:
+            type: string
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeviceList'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+  /profile/devices:
+    get:
+      summary: 'Get a list of devices'
+      description: 'Device related API endpoints.'
+      tags:
+        - Device
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/profiledevices'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+    put:
+      summary: 'Add a new device'
+      description: 'Device related API endpoints.'
+      tags:
+        - Device
+      operationId: ''
+      responses:
+        '200':
+          description: 'Success response'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/profiledevices'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/profiledevices'
+components:
+  schemas:
+    OTPRequest:
+      type: object
+      properties:
+        type:
+          type: string
+          example: phone
+          enum:
+            - phone
+            - email
+        value:
+          type: string
+          example: 'test@aurictouch.com'
+    OTPToken:
+      type: object
+      properties:
+        token:
+          type: string
+          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          description: 'The token to be sent back with the OTP.'
+    OTPValidationRequest:
+      type: object
+      properties:
+        otp:
+          type: string
+          example: '1124524'
+          description: 'The OTP received via email or phone number.'
+        token:
+          type: string
+          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          description: 'The token received via /auth/otp'
+
+    JWTRefreshRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          description: 'The refresh token is received via /auth/otp'
+    LogoutRequest:
+      type: object
+      properties:
+        refreshToken:
+          type: string
+          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          description: 'The refresh token is received via /auth/otp'
+    LogoutResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: 'Successfully logged out.'
+          description: 'The message received after logging out.'
+
+    AuthToken:
+      type: object
+      properties:
+        token:
+          type: string
+          description: 'The JWT token to be sent as Authorization header for all authenticated requests.'
+        refresh_token:
+          type: string
+          description: 'The refresh token to receive a new JWT token.'
+    BankIDAuthStartToken:
+      type: object
+      properties:
+        autoStartToken:
+          type: string
+          description: 'The auto start token needed by the app to start the Bank ID auth flow'
+    RefreshedToken:
+      type: object
+      properties:
+        token:
+          type: string
+          description: 'The refrehed JWT token.'
+    HealthSnapShot:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'steps'
+          description: 'Steps taken in a day.'
+        analysis:
+          type: string
+          example: 'You acheived your goal of 10k steps.'
+          description: 'Analytical description of the stats. Can be empty.'
+        value:
+          type: number
+          example: 97
+          description: 'Value for the given health parameter.'
+        date:
+          type: string
+          example: '2023-06-05T12:47:46.759Z'
+          description: 'Date must be a valid ISO 8601 date string.'
+    HealthSummary:
+      type: array
+      items:
+        $ref: '#/components/schemas/HealthSnapShot'
+
+    HealthTimeSeries:
+      type: object
+      properties:
+        name:
+          type: string
+          example: 'steps'
+          description: 'Steps taken in a day.'
+        analysis:
+          type: string
+          example: 'You acheived your goal of 10k steps.'
+          description: 'Analytical description of the stats. Can be empty.'
+        data:
+          type: object
+          properties:
+            value:
+              type: number
+              example: 97
+              description: 'Value for the given health parameter.'
+            date:
+              type: string
+              example: '2023-06-05T12:47:46.759Z'
+              description: 'Date must be a valid ISO 8601 date string.'
+    UserProfile:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: 'John'
+          description: 'FirstName of the user'
+        lastName:
+          type: string
+          example: 'Doe'
+          description: 'LastName of the user'
+        phone:
+          type: string
+          example: '+919999999999'
+          description: 'Phone number'
+        height:
+          type: number
+          example: 153
+          description: 'Height in cms'
+        gender:
+          type: string
+          example: M
+          enum:
+            - M
+            - F
+            - O
+            - U  
+          description: 'gender M (Male) or F (Female) or O (Other) or U (Unknown)'
+        email:
+          type: string
+          example: 'test@aurictouch.com'
+          description: 'Email address of the user.'
+    UserProfileRequest:
+      type: object
+      properties:
+        firstName:
+          type: string
+          example: 'John'
+          description: 'FirstName of the user'
+        lastName:
+          type: string
+          example: 'Doe'
+          description: 'LastName of the user'
+        phone:
+          type: string
+          example: '+919999999999'
+          description: 'Phone number'
+        height:
+          type: number
+          example: 153
+          description: 'Height in cms'
+        gender:
+          type: string
+          example: M
+          enum:
+            - M
+            - F
+            - O
+            - U  
+          description: 'gender M (Male) or F (Female) or O (Other) or U (Unknown)'
+    MedicalCondition:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 'The id of the medical condition.'
+        name:
+          type: string
+          description: 'The name of the medical condition'
+    MedicalConditions:
+      type: array
+      items:
+        $ref: '#/components/schemas/MedicalCondition'
+    Device:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          description: 'The name of the medical device.'
+          example: 'XYZ Co Blood Pressure Machine'
+    Devices:
+      type: array
+      items:
+        $ref: '#/components/schemas/Device'
+
+    LinkedDevice:
+      type: object
+      properties:
+        id:
+          type: number
+        name:
+          type: string
+          description: 'The name of the medical device.'
+        deviceId:
+          type: number
+          description: 'The id of the medical device. Used for DELETE requests.'
+        linkPayload:
+          type: string
+          description: 'Payload associated with linking the medical device for cross-device linking.'
+    DeviceSummary:
+      type: array
+      items:
+        $ref: '#/components/schemas/LinkedDevice'
+
+    StatsRequest:
+      type: object
+      properties:
+        date:
+          type: string
+          example: '2023-06-05T12:47:46.759Z'
+          description: 'Date must be a valid ISO 8601 date string.'
+        value:  
+          type: number
+          example: 97
+          description: 'Value for the given health parameter.'
+    
+    profiledevices:
+      type: object
+      properties:
+        list:
+          type: array
+          items:
+            type: number
+          description: 'The list of device ids associated with the user.'
+    DeviceList:
+      type: object
+      properties:
+        start:
+          type: number
+          example: 1
+          description: 'The start index of the list.'
+        limit:
+          type: number
+          example: 10
+          description: 'The limit of the list.'
+    UploadResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          example: 1
+          description: 'The id of the health parameter observation.'
+        name:
+          type: string
+          example: 'spo2'
+          description: 'The health parameter.'
+        value:
+          type: string
+          example: '76'
+          description: 'The value for the health parameter.'
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  responses:
+    UnauthorizedError:
+      description: Access token is missing or invalid
+security:
+  - bearerAuth: []
