@@ -206,7 +206,7 @@ export class AuthController {
       const jwtToken = req.headers.authorization.split(' ')[1];
 
       // Add the JWT token to redis with value = 0 and TTL of 1 hour
-      await authService.setToken(`BLOCKED_${jwtToken}`, 0, 60 * 60);
+      await authService.setToken(jwtToken, 0, 60 * 60);
 
       res.status(200).json({ message: 'User logged out' });
     } catch (error) {

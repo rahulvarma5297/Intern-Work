@@ -27,7 +27,7 @@ export const AuthMiddleware = async (req: RequestWithUser, res: Response, next: 
 
       if (findUser) {
         // Check if the JWT token has been blocked
-        const isBlocked = (await redis.get(`BLOCKED_${Authorization}`)) === '0';
+        const isBlocked = (await redis.get(Authorization)) === '0';
         if (isBlocked) {
           next(new HttpException(401, 'You are not authorized to access this resource.'));
         }

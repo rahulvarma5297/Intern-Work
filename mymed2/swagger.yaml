@@ -26,7 +26,7 @@ tags:
 paths:
   /auth/otp:
     post:
-      summary: 'Get OTP token provided a phone number or email'
+      summary: 'Get OTP and Token by providing email'
       description: 'Authentication endpoints'
       parameters: []
       operationId: ''
@@ -51,7 +51,7 @@ paths:
               $ref: '#/components/schemas/OTPRequest'
   /auth/otp/verify:
     post:
-      summary: 'Verify OTP token and get JWT token'
+      summary: 'Verify OTP and get JWT token'
       description: 'Authentication endpoints'
       parameters: []
       operationId: ''
@@ -127,8 +127,7 @@ paths:
       parameters: []
       operationId: ''
       tags:
-        - Auth
-        - BankID
+        - BankID Auth
       responses:
         '200':
           description: Default response
@@ -147,8 +146,7 @@ paths:
       parameters: []
       operationId: ''
       tags:
-        - Auth
-        - BankID
+        - BankID Auth
       responses:
         '200':
           description: Default response
@@ -843,30 +841,30 @@ components:
       properties:
         type:
           type: string
-          example: PHONE
+          example: EMAIL
           enum:
             - PHONE
             - EMAIL
         value:
           type: string
-          example: 'test@aurictouch.com'
+          example: 'aurictouch.test@gmail.com'
     OTPToken:
       type: object
       properties:
         token:
           type: string
-          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          example: '814ab0f9-2d00-42ea-b846-53f32dc246e3'
           description: 'The token to be sent back with the OTP.'
     OTPValidationRequest:
       type: object
       properties:
         otp:
           type: string
-          example: '1124524'
+          example: '982385'
           description: 'The OTP received via email or phone number.'
         token:
           type: string
-          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          example: '814ab0f9-2d00-42ea-b846-53f32dc246e3'
           description: 'The token received via /auth/otp'
 
     JWTRefreshRequest:
@@ -874,14 +872,14 @@ components:
       properties:
         refreshToken:
           type: string
-          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          example: '814ab0f9-2d00-42ea-b846-53f32dc246e3'
           description: 'The refresh token is received via /auth/otp'
     LogoutRequest:
       type: object
       properties:
         refreshToken:
           type: string
-          example: 'dadafadasdad787da$@#$fdfsd$@#'
+          example: '814ab0f9-2d00-42ea-b846-53f32dc246e3'
           description: 'The refresh token is received via /auth/otp'
     LogoutResponse:
       type: object
@@ -988,7 +986,7 @@ components:
           description: 'gender M (Male) or F (Female) or O (Other) or U (Unknown)'
         email:
           type: string
-          example: 'test@aurictouch.com'
+          example: 'aurictouch.test@gmail.com'
           description: 'Email address of the user.'
     UserProfileRequest:
       type: object

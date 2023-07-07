@@ -1,6 +1,6 @@
 //Create a generic email service to send emails using nodemailer
 //Path: src\services\email.services.ts
-import { TWILIO_AUTH_TOKEN, TWILIO_SERVICE_ID, TWILIO_SERVICE_NAME, TWILIO_SID } from '@/config';
+import { TWILIO_AUTH_TOKEN, TWILIO_SERVICE_ID, TWILIO_SID } from '@/config';
 import { HttpException } from '@/exceptions/httpException';
 import { Twilio } from 'twilio';
 import { Service } from 'typedi';

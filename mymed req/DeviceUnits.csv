@@ -1,0 +1,18 @@
+Index,Category English,Category Swedish( Column name ),Unit
+1,Weight,Vikt (Kg),Kg
+2,BMI,BMI,number
+3,Pulse,Puls (slag/min),slag/min
+4,Systolic,Systoliskt (mmHg),mmHg
+5,Diastolic,Diastoliskt (mmHg),mmHg
+6,BloodSugarShortTerm,P—Glukos (mmol/L),mmol/L
+7,BloodSugarLongTerm,B—HbA1c (IFCC) (mmol/mol),mmol/mol
+8,Steps,Steps,numeric value
+9,Sleep,Sleep,Hr m
+10,ASAT,ASAT,microkat/L
+11,ALAT,ALAT,mikrokat/L
+12,EnergyLevel,EnergyLevel,value 1-10
+13,Mood,Mood,value 1-10
+14,Stress,Stress,value 1-10
+15,Anxiety,Anxiety,value 1-10
+16,Depression,Depression,value 1-10
+17,Cholesterol,Cholesterol,mmol/L
